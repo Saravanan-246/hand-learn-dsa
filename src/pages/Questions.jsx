@@ -1,42 +1,56 @@
-import { Link, useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { dsaData } from "../data/dsaData";
+
+const topicKeyMap = {
+  array: "array",
+  "linked-list": "linkedList",
+  stack: "stack",
+  queue: "queue",
+  searching: "searching",
+  sorting: "sorting",
+  hashing: "hashing",
+  string: "string",
+  recursion: "recursion",
+};
 
 export default function Questions() {
   const { topic } = useParams();
-  const questions = dsaData[topic] || [];
+
+  const dataKey = topicKeyMap[topic];
+  const questions = dsaData[dataKey];
+
+  if (!questions) {
+    return <p style={{ padding: 32 }}>Topic not found</p>;
+  }
 
   return (
-    <div style={{ padding: "48px" }}>
-      <h2 style={{ fontSize: 28, fontWeight: 600, marginBottom: 8 }}>
-        {topic.toUpperCase()}
+    <div style={{ padding: 48 }}>
+      <h2 style={{ fontSize: 28, marginBottom: 24 }}>
+        {topic.replace("-", " ").toUpperCase()} Questions
       </h2>
-      <p style={{ color: "var(--muted)", marginBottom: 32 }}>
-        Practice important {topic} questions in Java
-      </p>
 
-      <div style={{ display: "grid", gap: 20 }}>
-        {questions.map((q, idx) => (
-          <Link
-            key={idx}
-            to={`/practice/${topic}/${idx}`}
-            style={{
-              padding: "24px",
-              background: "var(--card)",
-              border: "1px solid var(--border)",
-              borderRadius: "var(--radius)",
-              textDecoration: "none",
-              color: "var(--text)",
-            }}
-          >
-            <h3 style={{ fontSize: 18, marginBottom: 6 }}>
-              {q.title}
-            </h3>
-            <p style={{ color: "var(--muted)", fontSize: 14 }}>
-              {q.level} • Java
-            </p>
-          </Link>
+      <ul style={{ listStyle: "none", padding: 0 }}>
+        {questions.map((q, index) => (
+          <li key={index} style={{ marginBottom: 16 }}>
+            <Link
+              to={`/practice/${topic}/${index}`}
+              style={{
+                display: "block",
+                padding: 16,
+                border: "1px solid var(--border)",
+                borderRadius: "var(--radius)",
+                textDecoration: "none",
+                color: "var(--text)",
+              }}
+            >
+              <strong>{q.title}</strong>
+              <div style={{ fontSize: 14, color: "var(--muted)" }}>
+                Level: {q.level}
+              </div>
+            </Link>
+          </li>
         ))}
-      </div>
+      </ul>
     </div>
   );
 }

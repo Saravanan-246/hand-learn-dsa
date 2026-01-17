@@ -6,13 +6,30 @@ import PracticeEditor from "../components/PracticeEditor";
 import ProblemPanel from "../pages/ProblemPanel";
 import "../styles/practice.css";
 
+/* 🔥 URL topic → dsaData key map */
+const topicKeyMap = {
+  array: "array",
+  "linked-list": "linkedList",
+  stack: "stack",
+  queue: "queue",
+  searching: "searching",
+  sorting: "sorting",
+  hashing: "hashing",
+  string: "string",
+  recursion: "recursion",
+};
+
 export default function Practice() {
   const { topic, id } = useParams();
 
   /* ---------- Get Question Safely ---------- */
   const question = useMemo(() => {
     if (!topic || id === undefined) return null;
-    return dsaData?.[topic]?.[Number(id)] ?? null;
+
+    const dataKey = topicKeyMap[topic];
+    if (!dataKey) return null;
+
+    return dsaData?.[dataKey]?.[Number(id)] ?? null;
   }, [topic, id]);
 
   const [code, setCode] = useState("");
@@ -73,10 +90,8 @@ Status: ✓ Success`
 
       {/* ---------- 3 PANEL GRID ---------- */}
       <section className="content-grid">
-        {/* ✅ PROBLEM PANEL (LeetCode style input/output/answer) */}
         <ProblemPanel selectedTitle={question.title} />
 
-        {/* ---------- Editor Panel ---------- */}
         <PracticeEditor
           value={code}
           onChange={setCode}
@@ -85,7 +100,6 @@ Status: ✓ Success`
           autoFocus
         />
 
-        {/* ---------- Output Panel ---------- */}
         <article className="output-panel">
           <div className="panel-header">
             Output
