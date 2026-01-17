@@ -3,5 +3,5 @@ import react from "@vitejs/plugin-react";
 
 export default defineConfig({
   plugins: [react()],
-  base: "/hand-learn-dsa/", // 🔥 repo name EXACT
+  base: "/hand-learn-dsa/",
 });
