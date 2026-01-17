@@ -5,7 +5,11 @@ import { Suspense, useEffect, useRef } from "react";
 /* ---------------- GODZILLA MODEL ---------------- */
 function Godzilla() {
   const group = useRef();
-  const { scene, animations } = useGLTF("/models/godzilla.glb");
+
+  // 🔥 FIX: use BASE_URL
+  const modelPath = `${import.meta.env.BASE_URL}models/godzilla.glb`;
+
+  const { scene, animations } = useGLTF(modelPath);
   const { actions } = useAnimations(animations, group);
 
   useEffect(() => {
@@ -19,9 +23,9 @@ function Godzilla() {
     <primitive
       ref={group}
       object={scene}
-      scale={0.25}                 /* 🧩 tiny toy */
-      position={[0, -0.6, 0]}      /* ⬇️ centered & little down */
-      rotation={[0, Math.PI / 12, 0]} /* slight natural angle */
+      scale={0.25}
+      position={[0, -0.6, 0]}
+      rotation={[0, Math.PI / 12, 0]}
     />
   );
 }
@@ -31,10 +35,10 @@ export default function GodzillaBG() {
   return (
     <div className="bg-canvas">
       <Canvas
-        camera={{ position: [0, 1.1, 7], fov: 45 }} /* better framing */
+        camera={{ position: [0, 1.1, 7], fov: 45 }}
         dpr={[1, 1.5]}
       >
-        {/* Soft background lighting */}
+        {/* Lighting */}
         <ambientLight intensity={0.45} />
         <directionalLight position={[4, 6, 4]} intensity={1.0} />
         <directionalLight position={[-4, 3, -4]} intensity={0.5} />
@@ -43,7 +47,6 @@ export default function GodzillaBG() {
           <Godzilla />
         </Suspense>
 
-        {/* Slow background rotation */}
         <OrbitControls
           enableZoom={false}
           enablePan={false}
@@ -55,5 +58,5 @@ export default function GodzillaBG() {
   );
 }
 
-/* Preload model */
-useGLTF.preload("/models/godzilla.glb");
+/* 🔥 Preload model (same path!) */
+useGLTF.preload(`${import.meta.env.BASE_URL}models/godzilla.glb`);
